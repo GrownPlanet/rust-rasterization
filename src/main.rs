@@ -5,8 +5,10 @@ use sdl2::keyboard::Keycode;
 use sdl2::pixels::Color;
 use std::time::Duration;
 
-use triangle::{Point3D, Triangle3D};
+use point::Point3D;
+use triangle::Triangle3D;
 
+mod point;
 mod triangle;
 
 pub fn main() -> Result<(), String> {
@@ -14,7 +16,7 @@ pub fn main() -> Result<(), String> {
     let video_subsystem = sdl_context.video()?;
 
     let window = video_subsystem
-        .window("rust-sdl2 demo: Video", 800, 600)
+        .window("rasterization", 800, 600)
         .position_centered()
         .opengl()
         .build()
@@ -24,27 +26,34 @@ pub fn main() -> Result<(), String> {
 
     let mut event_pump = sdl_context.event_pump()?;
 
-    let points1 = [
-        (100, 100, 60),
-        (500, 100, 60),
-        (100, 500, 60),
-        (500, 500, 60),
+    let points = [
+        (250, 250, 60),
+        (250, -250, 60),
+        (-250, -250, 60),
+        (-250, 250, 60),
+        (250, 250, 90),
+        (250, -250, 90),
+        (-250, -250, 90),
+        (-250, 250, 90),
     ];
 
-    let tr3d1 = Triangle3D::new(points1[0], points1[1], points1[2]);
-    let tr3d2 = Triangle3D::new(points1[1], points1[2], points1[3]);
-
-    let points2 = [
-        (100, 100, 80),
-        (500, 100, 80),
-        (100, 500, 80),
-        (500, 500, 80),
+    let triangles = [
+        Triangle3D::new(points[0], points[1], points[3]),
+        Triangle3D::new(points[1], points[2], points[3]),
+        Triangle3D::new(points[0], points[1], points[4]),
+        Triangle3D::new(points[1], points[4], points[5]),
+        Triangle3D::new(points[1], points[5], points[6]),
+        Triangle3D::new(points[2], points[5], points[6]),
+        Triangle3D::new(points[2], points[3], points[7]),
+        Triangle3D::new(points[2], points[6], points[7]),
+        Triangle3D::new(points[0], points[3], points[7]),
+        Triangle3D::new(points[0], points[4], points[7]),
+        Triangle3D::new(points[4], points[5], points[7]),
+        Triangle3D::new(points[5], points[6], points[7]),
     ];
-
-    let tr3d3 = Triangle3D::new(points2[0], points2[1], points2[2]);
-    let tr3d4 = Triangle3D::new(points2[1], points2[2], points2[3]);
 
     let mut camera = Point3D::new(0, 0, 0);
+    let speed = 5;
 
     let near = 50;
 
@@ -56,6 +65,22 @@ pub fn main() -> Result<(), String> {
                     keycode: Some(Keycode::Escape),
                     ..
                 } => break 'running,
+                Event::KeyDown {
+                    keycode: Some(Keycode::W),
+                    ..
+                } => camera.y -= speed,
+                Event::KeyDown {
+                    keycode: Some(Keycode::S),
+                    ..
+                } => camera.y += speed,
+                Event::KeyDown {
+                    keycode: Some(Keycode::A),
+                    ..
+                } => camera.x -= speed,
+                Event::KeyDown {
+                    keycode: Some(Keycode::D),
+                    ..
+                } => camera.x += speed,
                 _ => {}
             }
         }
@@ -63,14 +88,11 @@ pub fn main() -> Result<(), String> {
         canvas.set_draw_color(Color::RGB(200, 200, 200));
         canvas.clear();
 
-        let mut rast = tr3d1.rasterize(near);
-        rast.draw(&mut canvas)?;
-        rast = tr3d2.rasterize(near);
-        rast.draw(&mut canvas)?;
-        rast = tr3d3.rasterize(near);
-        rast.draw(&mut canvas)?;
-        rast = tr3d4.rasterize(near);
-        rast.draw(&mut canvas)?;
+        let mut rast;
+        for triangle in &triangles {
+            rast = triangle.rasterize(near, &camera);
+            rast.draw(&mut canvas, 800, 600)?;
+        }
 
         canvas.present();
 
