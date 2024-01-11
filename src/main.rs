@@ -1,5 +1,5 @@
 // TODO:
-// - fix bug if the cube is behind the camera
+// - fix bug if the cube is behind the camera (check if points are oriented clockwise)
 // - fix devide by 0 bug
 // - add pitch
 
