@@ -5,9 +5,12 @@
 
 extern crate sdl2;
 
-use sdl2::event::Event;
-use sdl2::keyboard::Keycode;
-use sdl2::pixels::Color;
+use sdl2::{
+    event::Event,
+    keyboard::{Keycode, Scancode},
+    pixels::Color,
+};
+
 use std::time::Duration;
 
 use camera::{Camera, Dir};
@@ -73,40 +76,35 @@ pub fn main() -> Result<(), String> {
                     keycode: Some(Keycode::Escape),
                     ..
                 } => break 'running,
-                Event::KeyDown {
-                    keycode: Some(Keycode::W),
-                    ..
-                } => camera.move_dir(Dir::Forwards, speed),
-                Event::KeyDown {
-                    keycode: Some(Keycode::S),
-                    ..
-                } => camera.move_dir(Dir::Backwards, speed),
-                Event::KeyDown {
-                    keycode: Some(Keycode::A),
-                    ..
-                } => camera.move_dir(Dir::Left, speed),
-                Event::KeyDown {
-                    keycode: Some(Keycode::D),
-                    ..
-                } => camera.move_dir(Dir::Right, speed),
-                Event::KeyDown {
-                    keycode: Some(Keycode::Q),
-                    ..
-                } => camera.move_dir(Dir::Down, speed),
-                Event::KeyDown {
-                    keycode: Some(Keycode::E),
-                    ..
-                } => camera.move_dir(Dir::Up, speed),
-                Event::KeyDown {
-                    keycode: Some(Keycode::Right),
-                    ..
-                } => camera.rotate_yaw(0.2),
-                Event::KeyDown {
-                    keycode: Some(Keycode::Left),
-                    ..
-                } => camera.rotate_yaw(-0.2),
                 _ => {}
             }
+        }
+
+        let keyboard_state = event_pump.keyboard_state();
+
+        if keyboard_state.is_scancode_pressed(Scancode::W) {
+            camera.move_dir(Dir::Forwards, speed);
+        }
+        if keyboard_state.is_scancode_pressed(Scancode::S) {
+            camera.move_dir(Dir::Backwards, speed);
+        }
+        if keyboard_state.is_scancode_pressed(Scancode::A) {
+            camera.move_dir(Dir::Left, speed);
+        }
+        if keyboard_state.is_scancode_pressed(Scancode::D) {
+            camera.move_dir(Dir::Right, speed);
+        }
+        if keyboard_state.is_scancode_pressed(Scancode::Q) {
+            camera.move_dir(Dir::Down, speed);
+        }
+        if keyboard_state.is_scancode_pressed(Scancode::E) {
+            camera.move_dir(Dir::Up, speed);
+        }
+        if keyboard_state.is_scancode_pressed(Scancode::Right) {
+            camera.rotate_yaw(0.2);
+        }
+        if keyboard_state.is_scancode_pressed(Scancode::Left) {
+            camera.rotate_yaw(-0.2);
         }
 
         canvas.set_draw_color(Color::RGB(200, 200, 200));

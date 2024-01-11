@@ -51,8 +51,6 @@ impl Camera {
         } else if self.yaw < 0. {
             self.yaw = std::f32::consts::PI * 2.;
         }
-
-        println!("{}", self.yaw);
     }
 
     fn get_rotations(&self, speed: i32, offset: f32) -> (i32, i32) {
