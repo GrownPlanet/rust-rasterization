@@ -1,5 +1,6 @@
 extern crate sdl2;
 
+use camera::Camera;
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use sdl2::pixels::Color;
@@ -54,10 +55,10 @@ pub fn main() -> Result<(), String> {
         Triangle3D::new(points[5], points[6], points[7]),
     ];
 
-    let mut camera = Point3D::new(0, 0, 0);
-    let speed = 15;
-
     let near = 300;
+    let mut camera = Camera::new(Point3D::new(0, 0, -near), 0.);
+
+    let speed = 15;
 
     'running: loop {
         for event in event_pump.poll_iter() {
@@ -70,19 +71,27 @@ pub fn main() -> Result<(), String> {
                 Event::KeyDown {
                     keycode: Some(Keycode::W),
                     ..
-                } => camera.z += speed,
+                } => camera.location.z += speed,
                 Event::KeyDown {
                     keycode: Some(Keycode::S),
                     ..
-                } => camera.z -= speed,
+                } => camera.location.z -= speed,
                 Event::KeyDown {
                     keycode: Some(Keycode::A),
                     ..
-                } => camera.x -= speed,
+                } => camera.location.x -= speed,
                 Event::KeyDown {
                     keycode: Some(Keycode::D),
                     ..
-                } => camera.x += speed,
+                } => camera.location.x += speed,
+                Event::KeyDown {
+                    keycode: Some(Keycode::Right),
+                    ..
+                } => camera.yaw += 0.2,
+                Event::KeyDown {
+                    keycode: Some(Keycode::Left),
+                    ..
+                } => camera.yaw -= 0.2,
                 _ => {}
             }
         }

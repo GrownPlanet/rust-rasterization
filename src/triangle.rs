@@ -3,6 +3,7 @@ use sdl2::rect::Point;
 use sdl2::render::Canvas;
 use sdl2::video::Window;
 
+use crate::camera::Camera;
 use crate::point::Point3D;
 
 pub struct Triangle2D {
@@ -62,7 +63,7 @@ impl Triangle3D {
         }
     }
 
-    pub fn rasterize(&self, near: i32, camera: &Point3D) -> Triangle2D {
+    pub fn rasterize(&self, near: i32, camera: &Camera) -> Triangle2D {
         Triangle2D {
             p1: self.p1.rasterize(near, camera),
             p2: self.p2.rasterize(near, camera),
