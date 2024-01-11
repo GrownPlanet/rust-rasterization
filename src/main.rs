@@ -92,19 +92,19 @@ pub fn main() -> Result<(), String> {
                 Event::KeyDown {
                     keycode: Some(Keycode::Q),
                     ..
-                } => camera.move_dir(Dir::Up, speed),
+                } => camera.move_dir(Dir::Down, speed),
                 Event::KeyDown {
                     keycode: Some(Keycode::E),
                     ..
-                } => camera.move_dir(Dir::Down, speed),
+                } => camera.move_dir(Dir::Up, speed),
                 Event::KeyDown {
                     keycode: Some(Keycode::Right),
                     ..
-                } => camera.yaw += 0.2,
+                } => camera.rotate_yaw(0.2),
                 Event::KeyDown {
                     keycode: Some(Keycode::Left),
                     ..
-                } => camera.yaw -= 0.2,
+                } => camera.rotate_yaw(-0.2),
                 _ => {}
             }
         }

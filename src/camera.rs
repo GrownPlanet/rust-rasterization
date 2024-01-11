@@ -26,21 +26,33 @@ impl Camera {
                 self.location.z -= rotations.0;
             }
             Dir::Right => {
-                let rotations = self.get_rotations(speed, 90.);
+                let rotations = self.get_rotations(speed, std::f32::consts::PI / 2.);
 
                 self.location.x += rotations.1;
                 self.location.z += rotations.0;
             }
             Dir::Left => {
-                let rotations = self.get_rotations(speed, -90.);
+                let rotations = self.get_rotations(speed, std::f32::consts::PI / 2.);
 
-                self.location.x += rotations.1;
-                self.location.z += rotations.0;
+                self.location.x -= rotations.1;
+                self.location.z -= rotations.0;
             }
             Dir::Up => self.location.y -= speed,
             Dir::Down => self.location.y += speed,
             // _ => panic!("Direction not implemented yet!"),
         }
+    }
+
+    pub fn rotate_yaw(&mut self, dir: f32) {
+        self.yaw += dir;
+
+        if self.yaw > std::f32::consts::PI * 2. {
+            self.yaw = 0.;
+        } else if self.yaw < 0. {
+            self.yaw = std::f32::consts::PI * 2.;
+        }
+
+        println!("{}", self.yaw);
     }
 
     fn get_rotations(&self, speed: i32, offset: f32) -> (i32, i32) {
