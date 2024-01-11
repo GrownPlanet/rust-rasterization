@@ -1,11 +1,17 @@
+// TODO:
+// - better movement (move in direction the camera is pointing)
+// - fix bug if the cube is behind the camera
+// - fix devide by 0 bug
+// - add pitch
+
 extern crate sdl2;
 
-use camera::Camera;
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use sdl2::pixels::Color;
 use std::time::Duration;
 
+use camera::{Camera, Dir};
 use point::Point3D;
 use triangle::Triangle3D;
 
@@ -71,19 +77,19 @@ pub fn main() -> Result<(), String> {
                 Event::KeyDown {
                     keycode: Some(Keycode::W),
                     ..
-                } => camera.location.z += speed,
+                } => camera.move_dir(Dir::Forwards, speed),
                 Event::KeyDown {
                     keycode: Some(Keycode::S),
                     ..
-                } => camera.location.z -= speed,
+                } => camera.move_dir(Dir::Backwards, speed),
                 Event::KeyDown {
                     keycode: Some(Keycode::A),
                     ..
-                } => camera.location.x -= speed,
+                } => camera.move_dir(Dir::Left, speed),
                 Event::KeyDown {
                     keycode: Some(Keycode::D),
                     ..
-                } => camera.location.x += speed,
+                } => camera.move_dir(Dir::Right, speed),
                 Event::KeyDown {
                     keycode: Some(Keycode::Right),
                     ..

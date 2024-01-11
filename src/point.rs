@@ -14,7 +14,11 @@ impl Point3D {
     }
 
     pub fn rasterize(&self, near: i32, camera: &Camera) -> Point {
-        let rotated = self.rotate(camera);
+        let mut rotated = self.rotate(camera);
+
+        if rotated.z == 0 {
+            rotated.z = 1;
+        }
 
         let screenx = (near * (rotated.x - camera.location.x)) / (rotated.z - camera.location.z);
         let screeny = (near * (rotated.y - camera.location.y)) / (rotated.z - camera.location.z);
