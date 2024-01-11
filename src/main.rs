@@ -8,6 +8,7 @@ use std::time::Duration;
 use point::Point3D;
 use triangle::Triangle3D;
 
+mod camera;
 mod point;
 mod triangle;
 
@@ -17,6 +18,7 @@ pub fn main() -> Result<(), String> {
 
     let window = video_subsystem
         .window("rasterization", 800, 600)
+        .resizable()
         .position_centered()
         .opengl()
         .build()
@@ -27,14 +29,14 @@ pub fn main() -> Result<(), String> {
     let mut event_pump = sdl_context.event_pump()?;
 
     let points = [
-        (250, 250, 60),
-        (250, -250, 60),
-        (-250, -250, 60),
-        (-250, 250, 60),
-        (250, 250, 90),
-        (250, -250, 90),
-        (-250, -250, 90),
-        (-250, 250, 90),
+        (250, 250, 450),
+        (250, -250, 450),
+        (-250, -250, 450),
+        (-250, 250, 450),
+        (250, 250, 950),
+        (250, -250, 950),
+        (-250, -250, 950),
+        (-250, 250, 950),
     ];
 
     let triangles = [
@@ -53,9 +55,9 @@ pub fn main() -> Result<(), String> {
     ];
 
     let mut camera = Point3D::new(0, 0, 0);
-    let speed = 5;
+    let speed = 15;
 
-    let near = 50;
+    let near = 300;
 
     'running: loop {
         for event in event_pump.poll_iter() {
@@ -68,11 +70,11 @@ pub fn main() -> Result<(), String> {
                 Event::KeyDown {
                     keycode: Some(Keycode::W),
                     ..
-                } => camera.y -= speed,
+                } => camera.z += speed,
                 Event::KeyDown {
                     keycode: Some(Keycode::S),
                     ..
-                } => camera.y += speed,
+                } => camera.z -= speed,
                 Event::KeyDown {
                     keycode: Some(Keycode::A),
                     ..
@@ -88,10 +90,12 @@ pub fn main() -> Result<(), String> {
         canvas.set_draw_color(Color::RGB(200, 200, 200));
         canvas.clear();
 
+        let (width, height) = canvas.output_size()?;
+
         let mut rast;
         for triangle in &triangles {
             rast = triangle.rasterize(near, &camera);
-            rast.draw(&mut canvas, 800, 600)?;
+            rast.draw(&mut canvas, width, height)?;
         }
 
         canvas.present();

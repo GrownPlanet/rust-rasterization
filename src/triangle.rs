@@ -23,13 +23,13 @@ impl Triangle2D {
     pub fn draw(
         &self,
         canvas: &mut Canvas<Window>,
-        screen_width: i32,
-        screen_height: i32,
+        screen_width: u32,
+        screen_height: u32,
     ) -> Result<(), String> {
         canvas.set_draw_color(Color::RGB(0, 0, 0));
 
-        let half_width = screen_width / 2;
-        let half_height = screen_height / 2;
+        let half_width = screen_width as i32 / 2;
+        let half_height = screen_height as i32 / 2;
 
         let p1_2 = Point::new(self.p1.x + half_width, self.p1.y + half_height);
         let p2_2 = Point::new(self.p2.x + half_width, self.p2.y + half_height);
