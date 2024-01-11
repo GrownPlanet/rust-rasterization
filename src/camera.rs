@@ -37,8 +37,8 @@ impl Camera {
                 self.location.x += rotations.1;
                 self.location.z += rotations.0;
             }
-            Dir::Up => self.location.y += speed,
-            Dir::Down => self.location.y -= speed,
+            Dir::Up => self.location.y -= speed,
+            Dir::Down => self.location.y += speed,
             // _ => panic!("Direction not implemented yet!"),
         }
     }

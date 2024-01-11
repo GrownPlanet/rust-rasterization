@@ -1,5 +1,4 @@
 // TODO:
-// - better movement (move in direction the camera is pointing)
 // - fix bug if the cube is behind the camera
 // - fix devide by 0 bug
 // - add pitch
@@ -90,6 +89,14 @@ pub fn main() -> Result<(), String> {
                     keycode: Some(Keycode::D),
                     ..
                 } => camera.move_dir(Dir::Right, speed),
+                Event::KeyDown {
+                    keycode: Some(Keycode::Q),
+                    ..
+                } => camera.move_dir(Dir::Up, speed),
+                Event::KeyDown {
+                    keycode: Some(Keycode::E),
+                    ..
+                } => camera.move_dir(Dir::Down, speed),
                 Event::KeyDown {
                     keycode: Some(Keycode::Right),
                     ..
