@@ -67,6 +67,7 @@ pub fn main() -> Result<(), String> {
     let mut camera = Camera::new(Point3D::new(0, 0, -near), 0.);
 
     let speed = 15;
+    let rotation_speed = 0.1;
 
     'running: loop {
         for event in event_pump.poll_iter() {
@@ -101,10 +102,10 @@ pub fn main() -> Result<(), String> {
             camera.move_dir(Dir::Up, speed);
         }
         if keyboard_state.is_scancode_pressed(Scancode::Right) {
-            camera.rotate_yaw(0.2);
+            camera.rotate_yaw(rotation_speed);
         }
         if keyboard_state.is_scancode_pressed(Scancode::Left) {
-            camera.rotate_yaw(-0.2);
+            camera.rotate_yaw(-rotation_speed);
         }
 
         canvas.set_draw_color(Color::RGB(200, 200, 200));
@@ -121,7 +122,6 @@ pub fn main() -> Result<(), String> {
         canvas.present();
 
         ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 30));
-        // The rest of the game loop goes here...
     }
 
     Ok(())

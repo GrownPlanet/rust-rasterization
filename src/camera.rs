@@ -39,7 +39,6 @@ impl Camera {
             }
             Dir::Up => self.location.y -= speed,
             Dir::Down => self.location.y += speed,
-            // _ => panic!("Direction not implemented yet!"),
         }
     }
 
