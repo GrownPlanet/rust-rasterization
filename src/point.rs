@@ -35,11 +35,10 @@ impl Point3D {
 
     pub fn rotate(&self, camera: &Camera) -> Self {
         let yaw = camera.yaw;
-        let x = (self.x - camera.location.x) as f32;
-        let z = (self.z - camera.location.z) as f32;
+        // let pitch
 
-        let rotated_x = (x * yaw.cos() - z * yaw.sin()) as i32;
-        let rotated_z = (z * yaw.cos() + x * yaw.sin()) as i32;
+        let rotated_x = (self.x as f32 * yaw.cos() - self.z as f32 * yaw.sin()) as i32;
+        let rotated_z = (self.z as f32 * yaw.cos() + self.x as f32 * yaw.sin()) as i32;
 
         Self {
             x: rotated_x,
