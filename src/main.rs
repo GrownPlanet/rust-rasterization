@@ -15,7 +15,7 @@ use std::time::Duration;
 
 use camera::{Camera, Dir};
 use point::Point3D;
-use triangle::Triangle3D;
+use triangle::{Triangle2D, Triangle3D};
 
 mod camera;
 mod point;
@@ -113,10 +113,10 @@ pub fn main() -> Result<(), String> {
 
         let (width, height) = canvas.output_size()?;
 
-        let mut rast;
         for triangle in &triangles {
-            rast = triangle.rasterize(near, &camera);
-            rast.draw(&mut canvas, width, height)?;
+            if let Some(rast) = triangle.rasterize(near, &camera) {
+                rast.draw(&mut canvas, width, height)?;
+            }
         }
 
         canvas.present();
