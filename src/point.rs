@@ -13,20 +13,27 @@ impl Point3D {
         Self { x, y, z }
     }
 
-    pub fn rasterize(&self, near: i32, camera: &Camera) -> Point {
-        let mut rotated = self.rotate(camera);
+    pub fn move_point(&self, camera: &Camera) -> Self {
+        Self {
+            x: self.x - camera.location.x,
+            y: self.y - camera.location.y,
+            z: self.z - camera.location.z,
+        }
+    }
 
-        if rotated.z == 0 {
-            rotated.z = 1;
+    pub fn rasterize(&self, near: i32) -> Point {
+        let mut z = self.z;
+        if z == 0 {
+            z = 1;
         }
 
-        let screenx = (near * (rotated.x - camera.location.x)) / (rotated.z - camera.location.z);
-        let screeny = (near * (rotated.y - camera.location.y)) / (rotated.z - camera.location.z);
+        let screenx = (near * self.x) / z;
+        let screeny = (near * self.y) / z;
 
         Point::new(screenx, screeny)
     }
 
-    fn rotate(&self, camera: &Camera) -> Self {
+    pub fn rotate(&self, camera: &Camera) -> Self {
         let yaw = camera.yaw;
         let x = (self.x - camera.location.x) as f32;
         let z = (self.z - camera.location.z) as f32;
