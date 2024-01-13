@@ -1,6 +1,5 @@
 // TODO:
-// - fix bug if the cube is behind the camera (check if points are oriented clockwise)
-// - add pitch
+// fix bug looking away from cube
 
 extern crate sdl2;
 
