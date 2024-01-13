@@ -56,7 +56,7 @@ impl Camera {
         }
     }
     pub fn rotate_pitch(&mut self, dir: f32) {
-        self.pitch += dir;
+        self.pitch -= dir;
 
         if self.pitch > std::f32::consts::PI * 2. {
             self.pitch = 0.;
