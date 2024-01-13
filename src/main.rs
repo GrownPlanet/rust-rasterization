@@ -1,6 +1,5 @@
 // TODO:
 // - fix bug if the cube is behind the camera (check if points are oriented clockwise)
-// - fix devide by 0 bug
 // - add pitch
 
 extern crate sdl2;
@@ -15,7 +14,7 @@ use std::time::Duration;
 
 use camera::{Camera, Dir};
 use point::Point3D;
-use triangle::{Triangle2D, Triangle3D};
+use triangle::Triangle3D;
 
 mod camera;
 mod point;
@@ -63,8 +62,8 @@ pub fn main() -> Result<(), String> {
         Triangle3D::new(points[5], points[6], points[7]),
     ];
 
-    let near = 300;
-    let mut camera = Camera::new(Point3D::new(0, 0, -near), 0.);
+    let near = 500;
+    let mut camera = Camera::new(Point3D::new(0, 0, -near), 0., 0.);
 
     let speed = 15;
     let rotation_speed = 0.1;
@@ -106,6 +105,12 @@ pub fn main() -> Result<(), String> {
         }
         if keyboard_state.is_scancode_pressed(Scancode::Left) {
             camera.rotate_yaw(-rotation_speed);
+        }
+        if keyboard_state.is_scancode_pressed(Scancode::Up) {
+            camera.rotate_pitch(rotation_speed);
+        }
+        if keyboard_state.is_scancode_pressed(Scancode::Down) {
+            camera.rotate_pitch(-rotation_speed);
         }
 
         canvas.set_draw_color(Color::RGB(200, 200, 200));

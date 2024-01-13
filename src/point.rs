@@ -33,9 +33,8 @@ impl Point3D {
         Point::new(screenx, screeny)
     }
 
-    pub fn rotate(&self, camera: &Camera) -> Self {
+    pub fn rotate_x(&self, camera: &Camera) -> Self {
         let yaw = camera.yaw;
-        // let pitch
 
         let rotated_x = (self.x as f32 * yaw.cos() - self.z as f32 * yaw.sin()) as i32;
         let rotated_z = (self.z as f32 * yaw.cos() + self.x as f32 * yaw.sin()) as i32;
@@ -43,6 +42,18 @@ impl Point3D {
         Self {
             x: rotated_x,
             y: self.y,
+            z: rotated_z,
+        }
+    }
+    pub fn rotate_y(&self, camera: &Camera) -> Self {
+        let pitch = camera.pitch;
+
+        let rotated_y = (self.y as f32 * pitch.cos() - self.z as f32 * pitch.sin()) as i32;
+        let rotated_z = (self.z as f32 * pitch.cos() + self.y as f32 * pitch.sin()) as i32;
+
+        Self {
+            x: self.x,
+            y: rotated_y,
             z: rotated_z,
         }
     }

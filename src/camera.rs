@@ -3,12 +3,16 @@ use crate::point::Point3D;
 pub struct Camera {
     pub location: Point3D,
     pub yaw: f32,
-    // pub pitch: f32,
+    pub pitch: f32,
 }
 
 impl Camera {
-    pub fn new(location: Point3D, yaw: f32) -> Self {
-        Self { location, yaw }
+    pub fn new(location: Point3D, yaw: f32, pitch: f32) -> Self {
+        Self {
+            location,
+            yaw,
+            pitch,
+        }
     }
 
     pub fn move_dir(&mut self, direction: Dir, speed: i32) {
@@ -49,6 +53,15 @@ impl Camera {
             self.yaw = 0.;
         } else if self.yaw < 0. {
             self.yaw = std::f32::consts::PI * 2.;
+        }
+    }
+    pub fn rotate_pitch(&mut self, dir: f32) {
+        self.pitch += dir;
+
+        if self.pitch > std::f32::consts::PI * 2. {
+            self.pitch = 0.;
+        } else if self.pitch < 0. {
+            self.pitch = std::f32::consts::PI * 2.;
         }
     }
 

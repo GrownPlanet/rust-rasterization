@@ -69,7 +69,7 @@ impl Triangle3D {
 
     pub fn rasterize(&self, near: i32, camera: &Camera) -> Option<Triangle2D> {
         let moved_points = self.points.iter().map(|p| p.move_point(&camera));
-        let rotated_points = moved_points.map(|p| p.rotate(&camera));
+        let rotated_points = moved_points.map(|p| p.rotate_y(&camera).rotate_x(&camera));
 
         if let None = rotated_points.clone().filter(|p| p.z > 0).nth(1) {
             return None;
