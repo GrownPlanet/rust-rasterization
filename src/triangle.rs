@@ -49,43 +49,41 @@ impl Triangle2D {
             points: [p1, p2, p3],
         };
 
-        // canvas.draw_line(p1_2, p2_2)?;
-        // canvas.draw_line(p1_2, p3_2)?;
-        // canvas.draw_line(p2_2, p3_2)?;
-
         let min_x = tri_offset.points.iter().min_by_key(|p| p.x).unwrap().x;
         let min_y = tri_offset.points.iter().min_by_key(|p| p.y).unwrap().y;
         let max_x = tri_offset.points.iter().max_by_key(|p| p.x).unwrap().x;
         let max_y = tri_offset.points.iter().max_by_key(|p| p.y).unwrap().y;
 
         let dst = Rect::new(min_x, min_y, (max_x - min_x) as u32, (max_y - min_y) as u32);
-        // println!("{:?}", dst);
 
-        // let size = canvas.output_size().unwrap();
+        if dst.width() > screen_width * 2 || dst.height() > screen_height * 2 {
+            return Ok(());
+        }
 
         let texture_creator = canvas.texture_creator();
         let mut texture = texture_creator
-            .create_texture_streaming(PixelFormatEnum::RGB24, dst.width(), dst.height())
+            .create_texture_streaming(PixelFormatEnum::RGBA32, dst.width(), dst.height())
             .map_err(|e| e.to_string())?;
 
-        // Create a red-green gradient
         texture.with_lock(None, |buffer: &mut [u8], pitch: usize| {
             for y in 0..dst.height() {
                 for x in 0..dst.width() {
-                    let offset = y as usize * pitch + x as usize * 3;
+                    let offset = y as usize * pitch + x as usize * 4;
 
                     if tri_offset.is_inside(Point::new(x as i32 + dst.x, y as i32 + dst.y)) {
                         buffer[offset] = 255;
                     } else {
-                        buffer[offset] = 200;
-                        buffer[offset + 1] = 200;
-                        buffer[offset + 2] = 200;
+                        buffer[offset + 3] = 200;
                     }
                 }
             }
         })?;
 
         canvas.copy(&texture, None, dst)?;
+
+        canvas.draw_line(p1, p2)?;
+        canvas.draw_line(p1, p3)?;
+        canvas.draw_line(p2, p3)?;
 
         Ok(())
     }
