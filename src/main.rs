@@ -13,7 +13,7 @@ use std::time::Duration;
 
 use camera::{Camera, Dir};
 use point::Point3D;
-use triangle::Triangle3D;
+use triangle::{Triangle2D, Triangle3D};
 
 mod camera;
 mod point;
@@ -38,27 +38,28 @@ pub fn main() -> Result<(), String> {
     let points = [
         (250, 250, 450),
         (250, -250, 450),
-        (-250, -250, 450),
+        // (-250, -250, 450),
         (-250, 250, 450),
-        (250, 250, 950),
-        (250, -250, 950),
-        (-250, -250, 950),
-        (-250, 250, 950),
+        // (250, 250, 950),
+        // (250, -250, 950),
+        // (-250, -250, 950),
+        // (-250, 250, 950),
     ];
 
     let triangles = [
-        Triangle3D::new(points[0], points[1], points[3]),
-        Triangle3D::new(points[1], points[2], points[3]),
-        Triangle3D::new(points[0], points[1], points[4]),
-        Triangle3D::new(points[1], points[4], points[5]),
-        Triangle3D::new(points[1], points[5], points[6]),
-        Triangle3D::new(points[2], points[5], points[6]),
-        Triangle3D::new(points[2], points[3], points[7]),
-        Triangle3D::new(points[2], points[6], points[7]),
-        Triangle3D::new(points[0], points[3], points[7]),
-        Triangle3D::new(points[0], points[4], points[7]),
-        Triangle3D::new(points[4], points[5], points[7]),
-        Triangle3D::new(points[5], points[6], points[7]),
+        Triangle3D::new(points[0], points[1], points[2]),
+        // Triangle3D::new(points[0], points[1], points[3]),
+        // Triangle3D::new(points[1], points[2], points[3]),
+        // Triangle3D::new(points[0], points[1], points[4]),
+        // Triangle3D::new(points[1], points[4], points[5]),
+        // Triangle3D::new(points[1], points[5], points[6]),
+        // Triangle3D::new(points[2], points[5], points[6]),
+        // Triangle3D::new(points[2], points[3], points[7]),
+        // Triangle3D::new(points[2], points[6], points[7]),
+        // Triangle3D::new(points[0], points[3], points[7]),
+        // Triangle3D::new(points[0], points[4], points[7]),
+        // Triangle3D::new(points[4], points[5], points[7]),
+        // Triangle3D::new(points[5], points[6], points[7]),
     ];
 
     let near = 500;
