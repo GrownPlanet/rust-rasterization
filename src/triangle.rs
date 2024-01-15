@@ -68,12 +68,16 @@ impl Triangle3D {
     }
 
     pub fn rasterize(&self, near: i32, camera: &Camera) -> Option<Triangle2D> {
-        let moved_points = self.points.iter().map(|p| p.move_point(camera));
-        let rotated_points = moved_points.map(|p| p.rotate_x(camera).rotate_y(camera));
+        let moved_points = self
+            .points
+            .iter()
+            .map(|p| p.move_point(camera).rotate_x(camera).rotate_y(camera));
 
-        rotated_points.clone().filter(|p| p.z > 0).nth(1)?;
+        if moved_points.clone().any(|p| p.z < 0) {
+            return None;
+        }
 
-        let projected_points: Vec<Point> = rotated_points.map(|p| p.rasterize(near)).collect();
+        let projected_points: Vec<Point> = moved_points.map(|p| p.rasterize(near)).collect();
 
         Some(Triangle2D {
             points: projected_points.try_into().unwrap(),
