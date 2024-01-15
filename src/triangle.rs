@@ -53,38 +53,39 @@ impl Triangle2D {
         // canvas.draw_line(p1_2, p3_2)?;
         // canvas.draw_line(p2_2, p3_2)?;
 
-        // let min_x = tri_offset.points.iter().min_by_key(|p| p.x).unwrap().x;
-        // let min_y = tri_offset.points.iter().min_by_key(|p| p.y).unwrap().y;
-        // let max_x = tri_offset.points.iter().max_by_key(|p| p.x).unwrap().x;
-        // let max_y = tri_offset.points.iter().max_by_key(|p| p.y).unwrap().y;
+        let min_x = tri_offset.points.iter().min_by_key(|p| p.x).unwrap().x;
+        let min_y = tri_offset.points.iter().min_by_key(|p| p.y).unwrap().y;
+        let max_x = tri_offset.points.iter().max_by_key(|p| p.x).unwrap().x;
+        let max_y = tri_offset.points.iter().max_by_key(|p| p.y).unwrap().y;
 
-        // let dst = Rect::new(min_x, min_y, (max_x - min_x) as u32, (max_y - min_y) as u32);
+        let dst = Rect::new(min_x, min_y, (max_x - min_x) as u32, (max_y - min_y) as u32);
         // println!("{:?}", dst);
-
-        let size = canvas.output_size().unwrap();
 
         // let size = canvas.output_size().unwrap();
 
         let texture_creator = canvas.texture_creator();
         let mut texture = texture_creator
-            .create_texture_streaming(PixelFormatEnum::RGB24, size.0, size.1)
+            .create_texture_streaming(PixelFormatEnum::RGB24, dst.width(), dst.height())
             .map_err(|e| e.to_string())?;
 
         // Create a red-green gradient
         texture.with_lock(None, |buffer: &mut [u8], pitch: usize| {
-            for y in 0..size.1 {
-                for x in 0..size.0 {
+            for y in 0..dst.height() {
+                for x in 0..dst.width() {
                     let offset = y as usize * pitch + x as usize * 3;
-                    if tri_offset.is_inside(Point::new(x as i32, y as i32)) {
+
+                    if tri_offset.is_inside(Point::new(x as i32 + dst.x, y as i32 + dst.y)) {
                         buffer[offset] = 255;
+                    } else {
+                        buffer[offset] = 200;
+                        buffer[offset + 1] = 200;
+                        buffer[offset + 2] = 200;
                     }
-                    // buffer[offset + 1] = y as u8;
-                    // buffer[offset + 2] = 0;
                 }
             }
         })?;
 
-        canvas.copy(&texture, None, None)?;
+        canvas.copy(&texture, None, dst)?;
 
         Ok(())
     }
@@ -97,7 +98,7 @@ impl Triangle2D {
         (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y)
     }
 
-    pub fn is_inside(&self, point: Point) -> bool {
+    fn is_inside(&self, point: Point) -> bool {
         let d1 = Self::sign([point, self.points[0], self.points[1]]);
         let d2 = Self::sign([point, self.points[2], self.points[0]]);
         let d3 = Self::sign([point, self.points[1], self.points[2]]);

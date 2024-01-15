@@ -13,7 +13,7 @@ use std::time::Duration;
 
 use camera::{Camera, Dir};
 use point::Point3D;
-use triangle::{Triangle2D, Triangle3D};
+use triangle::Triangle3D;
 
 mod camera;
 mod point;
@@ -126,7 +126,7 @@ pub fn main() -> Result<(), String> {
 
         canvas.present();
 
-        ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 30));
+        ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
     }
 
     Ok(())
