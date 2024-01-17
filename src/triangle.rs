@@ -1,3 +1,5 @@
+use std::cmp;
+
 use sdl2::pixels::{Color, PixelFormatEnum};
 use sdl2::rect::{Point, Rect};
 use sdl2::render::Canvas;
@@ -49,16 +51,20 @@ impl Triangle2D {
             points: [p1, p2, p3],
         };
 
-        let min_x = tri_offset.points.iter().min_by_key(|p| p.x).unwrap().x;
-        let min_y = tri_offset.points.iter().min_by_key(|p| p.y).unwrap().y;
-        let max_x = tri_offset.points.iter().max_by_key(|p| p.x).unwrap().x;
-        let max_y = tri_offset.points.iter().max_by_key(|p| p.y).unwrap().y;
+        let csize = canvas.output_size().unwrap();
+
+        let min_x = cmp::max(tri_offset.points.iter().min_by_key(|p| p.x).unwrap().x, 0);
+        let min_y = cmp::max(tri_offset.points.iter().min_by_key(|p| p.y).unwrap().y, 0);
+        let max_x = cmp::min(
+            tri_offset.points.iter().max_by_key(|p| p.x).unwrap().x,
+            csize.0 as i32,
+        );
+        let max_y = cmp::min(
+            tri_offset.points.iter().max_by_key(|p| p.y).unwrap().y,
+            csize.1 as i32,
+        );
 
         let dst = Rect::new(min_x, min_y, (max_x - min_x) as u32, (max_y - min_y) as u32);
-
-        if dst.width() > screen_width * 2 || dst.height() > screen_height * 2 {
-            return Ok(());
-        }
 
         let texture_creator = canvas.texture_creator();
         let mut texture = texture_creator
