@@ -1,29 +1,29 @@
 use crate::camera::Camera;
 
 pub struct Point3D {
-    pub x: i32,
-    pub y: i32,
-    pub z: i32,
+    pub x: f32,
+    pub y: f32,
+    pub z: f32,
 }
 
 #[derive(Debug, Clone, Copy)]
 pub struct Point2D {
-    pub x: i32,
-    pub y: i32,
+    pub x: f32,
+    pub y: f32,
 }
 
 impl Point2D {
-    pub fn new(x: i32, y: i32) -> Self {
+    pub fn new(x: f32, y: f32) -> Self {
         Self { x, y }
     }
 
     pub fn as_tuple(&self) -> (f32, f32) {
-        (self.x as f32, self.y as f32)
+        (self.x, self.y)
     }
 }
 
 impl Point3D {
-    pub fn new(x: i32, y: i32, z: i32) -> Self {
+    pub fn new(x: f32, y: f32, z: f32) -> Self {
         Self { x, y, z }
     }
 
@@ -35,10 +35,10 @@ impl Point3D {
         }
     }
 
-    pub fn rasterize(&self, near: i32) -> Point2D {
+    pub fn rasterize(&self, near: f32) -> Point2D {
         let mut z = self.z;
-        if z == 0 {
-            z = 1;
+        if z == 0. {
+            z = 1.;
         }
 
         let screenx = (near * self.x) / z;
@@ -50,8 +50,8 @@ impl Point3D {
     pub fn rotate_x(&self, camera: &Camera) -> Self {
         let yaw = camera.yaw;
 
-        let rotated_x = (self.x as f32 * yaw.cos() - self.z as f32 * yaw.sin()) as i32;
-        let rotated_z = (self.z as f32 * yaw.cos() + self.x as f32 * yaw.sin()) as i32;
+        let rotated_x = self.x * yaw.cos() - self.z * yaw.sin();
+        let rotated_z = self.z * yaw.cos() + self.x * yaw.sin();
 
         Self {
             x: rotated_x,
@@ -62,8 +62,8 @@ impl Point3D {
     pub fn rotate_y(&self, camera: &Camera) -> Self {
         let pitch = camera.pitch;
 
-        let rotated_y = (self.y as f32 * pitch.cos() - self.z as f32 * pitch.sin()) as i32;
-        let rotated_z = (self.z as f32 * pitch.cos() + self.y as f32 * pitch.sin()) as i32;
+        let rotated_y = self.y * pitch.cos() - self.z * pitch.sin();
+        let rotated_z = self.z * pitch.cos() + self.y * pitch.sin();
 
         Self {
             x: self.x,

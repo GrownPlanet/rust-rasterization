@@ -16,21 +16,21 @@ struct State {
     triangles: Vec<Triangle3D>,
     projected_triangles: Vec<Triangle2D>,
     camera: Camera,
-    speed: i32,
+    speed: f32,
     rotation_speed: f32,
 }
 
 impl State {
     fn new() -> Self {
         let points = [
-            (250, 250, 450),
-            (250, -250, 450),
-            // (-250, -250, 450),
-            (-250, 250, 450),
-            // (250, 250, 950),
-            // (250, -250, 950),
-            // (-250, -250, 950),
-            // (-250, 250, 950),
+            (250., 250., 450.),
+            (250., -250., 450.),
+            // (-250., -250., 450.),
+            (-250., 250., 450.),
+            // (250., 250., 950.),
+            // (250., -250., 950.),
+            // (-250., -250., 950.),
+            // (-250., 250., 950.),
         ];
 
         let triangles = vec![
@@ -49,11 +49,11 @@ impl State {
             // Triangle3D::new(points[5], points[6], points[7]),
         ];
 
-        let near = 500;
-        let camera = Camera::new(Point3D::new(0, 0, -near), 0., 0., near);
+        let near = 500.;
+        let camera = Camera::new(Point3D::new(0., 0., -near), 0., 0., near);
 
-        let speed = 15;
-        let rotation_speed = 0.1;
+        let speed = 15.;
+        let rotation_speed = 0.05;
         Self {
             triangles,
             projected_triangles: vec![],
@@ -83,10 +83,10 @@ fn main() -> Result<(), String> {
 fn draw(gfx: &mut Graphics, state: &mut State) {
     let mut draw = gfx.create_draw();
 
-    draw.clear(Color::from_rgb(200., 200., 200.));
+    draw.clear(Color::from_rgb(0.8, 0.8, 0.8));
 
     for t in &state.projected_triangles {
-        t.draw(&mut draw, 800, 600).unwrap();
+        t.draw(&mut draw).unwrap();
     }
 
     gfx.render(&draw);
@@ -101,34 +101,34 @@ fn update(app: &mut App, state: &mut State) {
 
     let keyboard = &app.keyboard;
 
-    if keyboard.was_pressed(KeyCode::W) {
+    if keyboard.is_down(KeyCode::W) {
         state.camera.move_dir(Dir::Forwards, state.speed);
     }
-    if keyboard.was_pressed(KeyCode::S) {
+    if keyboard.is_down(KeyCode::S) {
         state.camera.move_dir(Dir::Backwards, state.speed);
     }
-    if keyboard.was_pressed(KeyCode::A) {
+    if keyboard.is_down(KeyCode::A) {
         state.camera.move_dir(Dir::Left, state.speed);
     }
-    if keyboard.was_pressed(KeyCode::D) {
+    if keyboard.is_down(KeyCode::D) {
         state.camera.move_dir(Dir::Right, state.speed);
     }
-    if keyboard.was_pressed(KeyCode::Q) {
+    if keyboard.is_down(KeyCode::Q) {
         state.camera.move_dir(Dir::Down, state.speed);
     }
-    if keyboard.was_pressed(KeyCode::E) {
+    if keyboard.is_down(KeyCode::E) {
         state.camera.move_dir(Dir::Up, state.speed);
     }
-    if keyboard.was_pressed(KeyCode::Right) {
+    if keyboard.is_down(KeyCode::Right) {
         state.camera.rotate_yaw(state.rotation_speed);
     }
-    if keyboard.was_pressed(KeyCode::Left) {
+    if keyboard.is_down(KeyCode::Left) {
         state.camera.rotate_yaw(-state.rotation_speed);
     }
-    if keyboard.was_pressed(KeyCode::Up) {
+    if keyboard.is_down(KeyCode::Up) {
         state.camera.rotate_pitch(state.rotation_speed);
     }
-    if keyboard.was_pressed(KeyCode::Down) {
+    if keyboard.is_down(KeyCode::Down) {
         state.camera.rotate_pitch(-state.rotation_speed);
     }
 }

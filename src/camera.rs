@@ -4,11 +4,11 @@ pub struct Camera {
     pub location: Point3D,
     pub yaw: f32,
     pub pitch: f32,
-    pub near: i32,
+    pub near: f32,
 }
 
 impl Camera {
-    pub fn new(location: Point3D, yaw: f32, pitch: f32, near: i32) -> Self {
+    pub fn new(location: Point3D, yaw: f32, pitch: f32, near: f32) -> Self {
         Self {
             location,
             yaw,
@@ -17,7 +17,7 @@ impl Camera {
         }
     }
 
-    pub fn move_dir(&mut self, direction: Dir, speed: i32) {
+    pub fn move_dir(&mut self, direction: Dir, speed: f32) {
         match direction {
             Dir::Forwards => {
                 let rotations = self.get_rotations(speed, 0.);
@@ -67,11 +67,11 @@ impl Camera {
         }
     }
 
-    fn get_rotations(&self, speed: i32, offset: f32) -> (i32, i32) {
-        let x = (self.yaw + offset).cos() * speed as f32;
-        let y = (self.yaw + offset).sin() * speed as f32;
+    fn get_rotations(&self, speed: f32, offset: f32) -> (f32, f32) {
+        let x = (self.yaw + offset).cos() * speed;
+        let y = (self.yaw + offset).sin() * speed;
 
-        (x as i32, y as i32)
+        (x, y)
     }
 }
 
