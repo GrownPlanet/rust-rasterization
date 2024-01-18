@@ -6,6 +6,8 @@ use crate::point::{Point2D, Point3D};
 
 pub struct Triangle2D {
     pub points: [Point2D; 3],
+    pub depth: f32,
+    pub color: Color,
 }
 
 impl Triangle2D {
@@ -29,7 +31,7 @@ impl Triangle2D {
         );
 
         draw.triangle(p1.as_tuple(), p2.as_tuple(), p3.as_tuple())
-            .color(Color::from_rgb(0.32, 0.72, 0.31));
+            .color(self.color);
 
         Ok(())
     }
@@ -37,6 +39,7 @@ impl Triangle2D {
 
 pub struct Triangle3D {
     pub points: [Point3D; 3],
+    pub color: Color,
 }
 
 impl Triangle3D {
@@ -44,6 +47,7 @@ impl Triangle3D {
         (x1, y1, z1): (f32, f32, f32),
         (x2, y2, z2): (f32, f32, f32),
         (x3, y3, z3): (f32, f32, f32),
+        color: Color,
     ) -> Self {
         let p1 = Point3D::new(x1, y1, z1);
         let p2 = Point3D::new(x2, y2, z2);
@@ -51,24 +55,30 @@ impl Triangle3D {
 
         Self {
             points: [p1, p2, p3],
+            color,
         }
     }
 
     pub fn rasterize(&self, camera: &Camera) -> Option<Triangle2D> {
-        let moved_points = self
+        let moved_points: Vec<Point3D> = self
             .points
             .iter()
-            .map(|p| p.move_point(camera).rotate_x(camera).rotate_y(camera));
+            .map(|p| p.move_point(camera).rotate_x(camera).rotate_y(camera))
+            .collect();
 
-        if moved_points.clone().any(|p| p.z < 0.) {
+        if moved_points.iter().any(|p| p.z < 0.) {
             return None;
         }
 
-        let projected_points: Vec<Point2D> =
-            moved_points.map(|p| p.rasterize(camera.near)).collect();
+        let projected_points: Vec<Point2D> = moved_points
+            .iter()
+            .map(|p| p.rasterize(camera.near))
+            .collect();
 
         Some(Triangle2D {
             points: projected_points.try_into().unwrap(),
+            depth: -moved_points[0].z,
+            color: self.color,
         })
     }
 }

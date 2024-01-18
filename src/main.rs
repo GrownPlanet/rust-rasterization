@@ -25,28 +25,37 @@ impl State {
         let points = [
             (250., 250., 450.),
             (250., -250., 450.),
-            // (-250., -250., 450.),
+            (-250., -250., 450.),
             (-250., 250., 450.),
-            // (250., 250., 950.),
-            // (250., -250., 950.),
-            // (-250., -250., 950.),
-            // (-250., 250., 950.),
+            (250., 250., 950.),
+            (250., -250., 950.),
+            (-250., -250., 950.),
+            (-250., 250., 950.),
+        ];
+
+        let colors = [
+            Color::from_rgb(0., 0., 0.),
+            Color::from_rgb(255., 0., 0.),
+            Color::from_rgb(0., 255., 0.),
+            Color::from_rgb(0., 0., 255.),
+            Color::from_rgb(255., 255., 0.),
+            Color::from_rgb(255., 0., 255.),
         ];
 
         let triangles = vec![
-            Triangle3D::new(points[0], points[1], points[2]),
-            // Triangle3D::new(points[0], points[1], points[3]),
-            // Triangle3D::new(points[1], points[2], points[3]),
-            // Triangle3D::new(points[0], points[1], points[4]),
-            // Triangle3D::new(points[1], points[4], points[5]),
-            // Triangle3D::new(points[1], points[5], points[6]),
-            // Triangle3D::new(points[2], points[5], points[6]),
-            // Triangle3D::new(points[2], points[3], points[7]),
-            // Triangle3D::new(points[2], points[6], points[7]),
-            // Triangle3D::new(points[0], points[3], points[7]),
-            // Triangle3D::new(points[0], points[4], points[7]),
-            // Triangle3D::new(points[4], points[5], points[7]),
-            // Triangle3D::new(points[5], points[6], points[7]),
+            // Triangle3D::new(points[0], points[1], points[2]),
+            Triangle3D::new(points[0], points[1], points[3], colors[0]),
+            Triangle3D::new(points[1], points[2], points[3], colors[0]),
+            Triangle3D::new(points[0], points[1], points[4], colors[1]),
+            Triangle3D::new(points[1], points[4], points[5], colors[1]),
+            Triangle3D::new(points[1], points[5], points[6], colors[2]),
+            Triangle3D::new(points[2], points[5], points[6], colors[2]),
+            Triangle3D::new(points[2], points[3], points[7], colors[3]),
+            Triangle3D::new(points[2], points[6], points[7], colors[3]),
+            Triangle3D::new(points[0], points[3], points[7], colors[4]),
+            Triangle3D::new(points[0], points[4], points[7], colors[4]),
+            Triangle3D::new(points[4], points[5], points[7], colors[5]),
+            Triangle3D::new(points[5], points[6], points[7], colors[5]),
         ];
 
         let near = 500.;
@@ -54,6 +63,7 @@ impl State {
 
         let speed = 15.;
         let rotation_speed = 0.05;
+
         Self {
             triangles,
             projected_triangles: vec![],
@@ -84,6 +94,8 @@ fn draw(gfx: &mut Graphics, state: &mut State) {
     let mut draw = gfx.create_draw();
 
     draw.clear(Color::from_rgb(0.8, 0.8, 0.8));
+
+    state.projected_triangles.sort_by_key(|t1| t1.depth as i32);
 
     for t in &state.projected_triangles {
         t.draw(&mut draw).unwrap();
