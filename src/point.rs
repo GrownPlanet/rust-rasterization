@@ -1,11 +1,25 @@
-use sdl2::rect::Point;
-
 use crate::camera::Camera;
 
 pub struct Point3D {
     pub x: i32,
     pub y: i32,
     pub z: i32,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct Point2D {
+    pub x: i32,
+    pub y: i32,
+}
+
+impl Point2D {
+    pub fn new(x: i32, y: i32) -> Self {
+        Self { x, y }
+    }
+
+    pub fn as_tuple(&self) -> (f32, f32) {
+        (self.x as f32, self.y as f32)
+    }
 }
 
 impl Point3D {
@@ -21,7 +35,7 @@ impl Point3D {
         }
     }
 
-    pub fn rasterize(&self, near: i32) -> Point {
+    pub fn rasterize(&self, near: i32) -> Point2D {
         let mut z = self.z;
         if z == 0 {
             z = 1;
@@ -30,7 +44,7 @@ impl Point3D {
         let screenx = (near * self.x) / z;
         let screeny = (near * self.y) / z;
 
-        Point::new(screenx, screeny)
+        Point2D::new(screenx, screeny)
     }
 
     pub fn rotate_x(&self, camera: &Camera) -> Self {
