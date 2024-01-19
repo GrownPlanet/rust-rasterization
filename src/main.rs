@@ -34,12 +34,12 @@ impl State {
         ];
 
         let colors = [
-            Color::from_rgb(0., 0., 0.),
-            Color::from_rgb(255., 0., 0.),
-            Color::from_rgb(0., 255., 0.),
-            Color::from_rgb(0., 0., 255.),
-            Color::from_rgb(255., 255., 0.),
-            Color::from_rgb(255., 0., 255.),
+            Color::from_rgb(1., 1., 1.),
+            Color::from_rgb(1., 0., 0.),
+            Color::from_rgb(0., 0., 1.),
+            Color::from_rgb(1., 0.5, 0.),
+            Color::from_rgb(0., 1., 0.),
+            Color::from_rgb(1., 1., 0.),
         ];
 
         let triangles = vec![
