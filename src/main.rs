@@ -43,17 +43,22 @@ impl State {
         ];
 
         let triangles = vec![
-            // Triangle3D::new(points[0], points[1], points[2]),
+            // side0
             Triangle3D::new(points[0], points[1], points[3], colors[0]),
             Triangle3D::new(points[1], points[2], points[3], colors[0]),
+            // side1
             Triangle3D::new(points[0], points[1], points[4], colors[1]),
             Triangle3D::new(points[1], points[4], points[5], colors[1]),
+            // side2
             Triangle3D::new(points[1], points[5], points[6], colors[2]),
-            Triangle3D::new(points[2], points[5], points[6], colors[2]),
+            Triangle3D::new(points[1], points[2], points[6], colors[2]),
+            // side3
             Triangle3D::new(points[2], points[3], points[7], colors[3]),
             Triangle3D::new(points[2], points[6], points[7], colors[3]),
+            // side4
             Triangle3D::new(points[0], points[3], points[7], colors[4]),
             Triangle3D::new(points[0], points[4], points[7], colors[4]),
+            // side5
             Triangle3D::new(points[4], points[5], points[7], colors[5]),
             Triangle3D::new(points[5], points[6], points[7], colors[5]),
         ];

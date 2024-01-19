@@ -77,7 +77,7 @@ impl Triangle3D {
 
         Some(Triangle2D {
             points: projected_points.try_into().unwrap(),
-            depth: -moved_points[0].z,
+            depth: -(moved_points[0].z + moved_points[1].z + moved_points[2].z) / 3.,
             color: self.color,
         })
     }
