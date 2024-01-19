@@ -22,49 +22,68 @@ struct State {
 
 impl State {
     fn new() -> Self {
+        //            |
+        //  0---------|---------1
+        //  |         |         |
+        //  |   4-----|-----5   |
+        //  |   |     |     |   |
+        //  |   |     |     |   |
+        // -----------+------------> x
+        //  |   |     |     |   |
+        //  |   |     |     |   |
+        //  |   7-----|-----6   |
+        //  |         |         |
+        //  3---------|---------2
+        //            V y
+
         let points = [
-            (250., 250., 450.),
-            (250., -250., 450.),
-            (-250., -250., 450.),
-            (-250., 250., 450.),
-            (250., 250., 950.),
-            (250., -250., 950.),
-            (-250., -250., 950.),
-            (-250., 250., 950.),
+            (-250., -250., -250.), // 0
+            (250., -250., -250.),  // 1
+            (250., 250., -250.),   // 2
+            (-250., 250., -250.),  // 3
+            (-250., -250., 250.),  // 4
+            (250., -250., 250.),   // 5
+            (250., 250., 250.),    // 6
+            (-250., 250., 250.),   // 7
         ];
 
         let colors = [
-            Color::from_rgb(1., 1., 1.),
-            Color::from_rgb(1., 0., 0.),
-            Color::from_rgb(0., 0., 1.),
-            Color::from_rgb(1., 0.5, 0.),
-            Color::from_rgb(0., 1., 0.),
-            Color::from_rgb(1., 1., 0.),
+            Color::from_rgb(1., 1., 1.),  // white
+            Color::from_rgb(1., 1., 0.),  // yellow
+            Color::from_rgb(0., 0., 1.),  // blue
+            Color::from_rgb(0., 1., 0.),  // green
+            Color::from_rgb(1., 0.5, 0.), // oragne
+            Color::from_rgb(1., 0., 0.),  // red
         ];
 
-        let triangles = vec![
-            // side0
-            Triangle3D::new(points[0], points[1], points[3], colors[0]),
-            Triangle3D::new(points[1], points[2], points[3], colors[0]),
-            // side1
-            Triangle3D::new(points[0], points[1], points[4], colors[1]),
-            Triangle3D::new(points[1], points[4], points[5], colors[1]),
-            // side2
-            Triangle3D::new(points[1], points[5], points[6], colors[2]),
-            Triangle3D::new(points[1], points[2], points[6], colors[2]),
-            // side3
-            Triangle3D::new(points[2], points[3], points[7], colors[3]),
-            Triangle3D::new(points[2], points[6], points[7], colors[3]),
-            // side4
-            Triangle3D::new(points[0], points[3], points[7], colors[4]),
-            Triangle3D::new(points[0], points[4], points[7], colors[4]),
-            // side5
-            Triangle3D::new(points[4], points[5], points[7], colors[5]),
-            Triangle3D::new(points[5], points[6], points[7], colors[5]),
+        let verts = [
+            // front
+            (0, 1, 2, 0),
+            (0, 2, 3, 0),
+            // back
+            (4, 5, 6, 1),
+            (4, 6, 7, 1),
+            // right
+            (5, 1, 2, 2),
+            (5, 2, 6, 2),
+            // left
+            (0, 4, 3, 3),
+            (4, 7, 3, 3),
+            // top
+            (0, 1, 4, 4),
+            (4, 1, 5, 4),
+            // bottom
+            (7, 2, 3, 5),
+            (7, 6, 2, 5),
         ];
+
+        let triangles = verts
+            .iter()
+            .map(|v| Triangle3D::new(points[v.0], points[v.1], points[v.2], colors[v.3]))
+            .collect();
 
         let near = 500.;
-        let camera = Camera::new(Point3D::new(0., 0., -near), 0., 0., near);
+        let camera = Camera::new(Point3D::new(0., 0., -1000.), 0., 0., near);
 
         let speed = 15.;
         let rotation_speed = 0.05;
@@ -105,6 +124,11 @@ fn draw(gfx: &mut Graphics, state: &mut State) {
     for t in &state.projected_triangles {
         t.draw(&mut draw).unwrap();
     }
+
+    let s = draw.size();
+    draw.circle(2.5)
+        .position(s.0 / 2., s.1 / 2.)
+        .color(Color::from_rgb(0., 0., 0.));
 
     gfx.render(&draw);
 }

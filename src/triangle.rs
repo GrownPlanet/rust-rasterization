@@ -33,6 +33,13 @@ impl Triangle2D {
         draw.triangle(p1.as_tuple(), p2.as_tuple(), p3.as_tuple())
             .color(self.color);
 
+        draw.line((p1.x, p1.y), (p2.x, p2.y))
+            .color(Color::from_rgb(0., 0., 0.));
+        draw.line((p1.x, p1.y), (p3.x, p3.y))
+            .color(Color::from_rgb(0., 0., 0.));
+        draw.line((p2.x, p2.y), (p3.x, p3.y))
+            .color(Color::from_rgb(0., 0., 0.));
+
         Ok(())
     }
 }
@@ -77,7 +84,7 @@ impl Triangle3D {
 
         Some(Triangle2D {
             points: projected_points.try_into().unwrap(),
-            depth: -(moved_points[0].z + moved_points[1].z + moved_points[2].z) / 3.,
+            depth: -(moved_points[0].z + moved_points[1].z + moved_points[2].z),
             color: self.color,
         })
     }
